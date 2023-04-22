@@ -5,11 +5,17 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.apache.commons.lang3.StringUtils;
 
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +51,34 @@ public class JWTTokenProvider {
         return stream(claims).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
-    //returneazaz o lista de autorizari pe care le are un user
+    //autentificarea -> folosim pentru a vedea cine este autentificat in acest moment
+    public Authentication getAuthentication(String username, List<GrantedAuthority> authorities, HttpServletRequest request){
+        UsernamePasswordAuthenticationToken userPasswordAuthToken =
+                new UsernamePasswordAuthenticationToken(username, null, authorities);
+        userPasswordAuthToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        return userPasswordAuthToken;
+    }
+
+    //verif sa nu trimietm un username gol si verificam autenticitatea tokenului si apoi daca este expirat
+    public boolean isTokenValid(String username, String token){
+        JWTVerifier verifier = getJWTVerifier();
+        return StringUtils.isNotEmpty(username) && !isTokenExpired(verifier, token);
+    }
+
+    // returnarea unui subject: adica al cui este: usernamen-ul
+    public String getSubject(String token){
+        JWTVerifier verifier = getJWTVerifier();
+        return verifier.verify(token).getSubject();
+    }
+
+    //primim un verifier care va trece prin functia 'getJWTVerifier' pentru a vedea daca token-ul trimis este unul valid trimis de catre noi
+    private boolean isTokenExpired(JWTVerifier verifier, String token){
+        Date expiration = verifier.verify(token).getExpiresAt();
+        return expiration.before(new Date());
+    }
+
+
+    //returneaza o lista de autoritari pe care le are un user
     //Granted authority => autoritatea unui user
     private String[] getClaimsFromUser(UserDetails userDetails){
         List<String> authorities = new ArrayList<>();
