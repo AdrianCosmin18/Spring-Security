@@ -24,6 +24,7 @@ import static com.example.springsecutiryexemple.utils.Utils.*;
 
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
+    //dupa login se stocheaza toate persmisiunile unui user
 
     private JWTTokenProvider jwtTokenProvider;
 
