@@ -28,8 +28,7 @@ public class Book {
     @Column(name = "email", nullable = false)
     private String author;
 
-    @NotEmpty
-    @Column(name = "numberOfPages")
+    @Column(name = "numberOfPages", nullable = false)
     private int numberOfPages;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -40,4 +39,10 @@ public class Book {
     )
     @JsonBackReference
     private User user;
+
+    public Book(String name, String author, int numberOfPages) {
+        this.name = name;
+        this.author = author;
+        this.numberOfPages = numberOfPages;
+    }
 }

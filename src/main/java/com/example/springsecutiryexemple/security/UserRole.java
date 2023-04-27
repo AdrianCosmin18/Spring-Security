@@ -12,7 +12,8 @@ import static com.example.springsecutiryexemple.security.UserPermission.*;
 @AllArgsConstructor
 public enum UserRole {
 
-    USER(Sets.newHashSet(BOOK_READ, BOOK_WRITE));
+    USER(Sets.newHashSet(BOOK_READ, BOOK_WRITE)),
+    ADMIN(Sets.newHashSet(BOOK_ADD, BOOK_WRITE, BOOK_READ, USER_ADD, USER_WRITE, USER_READ));
 
     private final Set<UserPermission> permissions;
     public Set<UserPermission> getPermissions(){ return permissions; }

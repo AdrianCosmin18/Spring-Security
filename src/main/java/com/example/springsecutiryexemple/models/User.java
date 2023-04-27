@@ -43,6 +43,20 @@ public class User implements UserDetails {
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole = UserRole.USER;
+
+    @Column(name = "isAccountNonExpired")
+    private boolean isAccountNonExpired = true;
+    @Column(name = "isAccountNonLocked")
+    private boolean isAccountNonLocked = true;
+    @Column(name = "isCredentialsNonExpired")
+    private boolean isCredentialsNonExpired = true;
+
+    @Column(name = "isEnabled")
+    private boolean isEnabled = true;
+
+
     public User(String name, String password, String email, String phone) {
         this.name = name;
         this.password = new BCryptPasswordEncoder().encode(password);
@@ -69,8 +83,8 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //ii dam rolul de user creat in UserRole pe baza lui UserPermission
-        return UserRole.USER.getGrantedAuthorities();
+        //ii dam rolul de user/admin creat in UserRole pe baza lui UserPermission
+        return this.userRole.getGrantedAuthorities();
     }
 
     @Override
@@ -85,21 +99,21 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return this.isAccountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return this.isCredentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 }

@@ -5,6 +5,7 @@ import com.example.springsecutiryexemple.exceptions.UserExistsException;
 import com.example.springsecutiryexemple.exceptions.UserNotFoundException;
 import com.example.springsecutiryexemple.models.User;
 import com.example.springsecutiryexemple.repo.UserRepo;
+import com.example.springsecutiryexemple.security.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,12 @@ public class UserService {
     public Long findIdByUsername(String email){
         return this.userRepo.findIdByUsername(email)
                 .orElseThrow(() -> new UserNotFoundException("User id not found"));
+    }
+
+    public void makeUserAsAdmin(String email){
+        User user = this.userRepo.getUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("No user with this email"));
+        user.setUserRole(UserRole.ADMIN);
+        this.userRepo.saveAndFlush(user);
     }
 }
