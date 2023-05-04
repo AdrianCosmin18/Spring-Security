@@ -6,10 +6,16 @@ import com.example.springsecutiryexemple.exceptions.NoBookFoundException;
 import com.example.springsecutiryexemple.models.Book;
 import com.example.springsecutiryexemple.repo.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Service
@@ -25,6 +31,11 @@ public class BookService {
             throw new NoBookFoundException("No book found");
         }
         return books;
+    }
+
+    public List<Book> getAvailableBooks(){//carti pe care nu le are nimeni
+
+        return this.bookRepo.findAllAvailableBooks();
     }
 
     @Transactional

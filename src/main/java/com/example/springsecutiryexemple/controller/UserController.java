@@ -4,6 +4,7 @@ import com.example.springsecutiryexemple.DTO.LoginResponse;
 import com.example.springsecutiryexemple.DTO.RegisterResponse;
 import com.example.springsecutiryexemple.DTO.UserDTO;
 import com.example.springsecutiryexemple.jwt.JWTTokenProvider;
+import com.example.springsecutiryexemple.models.Book;
 import com.example.springsecutiryexemple.models.User;
 import com.example.springsecutiryexemple.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.example.springsecutiryexemple.utils.Utils.JWT_TOKEN_HEADER;
 
@@ -72,5 +75,20 @@ public class UserController {
         // punem in header nou token generat cu numele: Jwt-Token
         headers.add(JWT_TOKEN_HEADER, jwtTokenProvider.generateJwtToken(user));
         return headers;
+    }
+
+    @PostMapping("/add-book-to-user/{email}")
+    public void addBookToUser(@PathVariable String email, @RequestParam(value = "bookId") long bookId){
+        this.userService.addBookToUser(email, bookId);
+    }
+
+    @DeleteMapping("/remove-book-from-user/{email}")
+    public void removeBookFromUser(@PathVariable String email, @RequestParam(value = "bookId") long bookId){
+        this.userService.removeBookFromUser(email, bookId);
+    }
+
+    @GetMapping("/get-user-books/{email}")
+    public ResponseEntity<List<Book>> getUserBooks(@PathVariable String email){
+        return new ResponseEntity<>(this.userService.getUserBooks(email), HttpStatus.OK);
     }
 }

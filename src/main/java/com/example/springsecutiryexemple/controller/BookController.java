@@ -30,4 +30,9 @@ public class BookController {
     public void addBook(@RequestBody BookDto bookDto){
         this.bookService.addBook(bookDto);
     }
+
+    @GetMapping("/available-books")
+    public ResponseEntity<List<Book>> getAvailableBooks(){
+        return new ResponseEntity<>(this.bookService.getAvailableBooks(), HttpStatus.OK);
+    }
 }
