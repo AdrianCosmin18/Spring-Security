@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -78,16 +79,19 @@ public class UserController {
     }
 
     @PostMapping("/add-book-to-user/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public void addBookToUser(@PathVariable String email, @RequestParam(value = "bookId") long bookId){
         this.userService.addBookToUser(email, bookId);
     }
 
     @DeleteMapping("/remove-book-from-user/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public void removeBookFromUser(@PathVariable String email, @RequestParam(value = "bookId") long bookId){
         this.userService.removeBookFromUser(email, bookId);
     }
 
     @GetMapping("/get-user-books/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public ResponseEntity<List<Book>> getUserBooks(@PathVariable String email){
         return new ResponseEntity<>(this.userService.getUserBooks(email), HttpStatus.OK);
     }
