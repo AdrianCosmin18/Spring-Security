@@ -52,7 +52,6 @@ public class User implements UserDetails {
     private boolean isAccountNonLocked = true;
     @Column(name = "isCredentialsNonExpired")
     private boolean isCredentialsNonExpired = true;
-
     @Column(name = "isEnabled")
     private boolean isEnabled = true;
 

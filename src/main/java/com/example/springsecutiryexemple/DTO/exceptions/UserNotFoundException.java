@@ -1,4 +1,4 @@
-package com.example.springsecutiryexemple.exceptions;
+package com.example.springsecutiryexemple.DTO.exceptions;
 
 import com.example.springsecutiryexemple.models.User;
 import org.springframework.http.HttpStatus;

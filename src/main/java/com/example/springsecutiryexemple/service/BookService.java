@@ -1,21 +1,15 @@
 package com.example.springsecutiryexemple.service;
 
 import com.example.springsecutiryexemple.DTO.BookDto;
-import com.example.springsecutiryexemple.exceptions.BookExistsException;
-import com.example.springsecutiryexemple.exceptions.NoBookFoundException;
+import com.example.springsecutiryexemple.DTO.exceptions.BookExistsException;
+import com.example.springsecutiryexemple.DTO.exceptions.NoBookFoundException;
 import com.example.springsecutiryexemple.models.Book;
 import com.example.springsecutiryexemple.repo.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Service
@@ -51,6 +45,11 @@ public class BookService {
     public Book getBookByTitle(String title){
         return this.bookRepo.findBookByName(title)
                 .orElseThrow(() -> new NoBookFoundException("The book does not exists"));
+    }
+
+    public Book getBookById(Long id){
+        return this.bookRepo.findById(id)
+                .orElseThrow(() -> new NoBookFoundException("There is no book with this id: "+ id));
     }
 
 

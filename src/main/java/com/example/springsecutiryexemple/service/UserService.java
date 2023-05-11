@@ -1,9 +1,9 @@
 package com.example.springsecutiryexemple.service;
 
 import com.example.springsecutiryexemple.DTO.UserDTO;
-import com.example.springsecutiryexemple.exceptions.NoBookFoundException;
-import com.example.springsecutiryexemple.exceptions.UserExistsException;
-import com.example.springsecutiryexemple.exceptions.UserNotFoundException;
+import com.example.springsecutiryexemple.DTO.exceptions.NoBookFoundException;
+import com.example.springsecutiryexemple.DTO.exceptions.UserExistsException;
+import com.example.springsecutiryexemple.DTO.exceptions.UserNotFoundException;
 import com.example.springsecutiryexemple.models.Book;
 import com.example.springsecutiryexemple.models.User;
 import com.example.springsecutiryexemple.repo.BookRepo;

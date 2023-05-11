@@ -1,6 +1,6 @@
 package com.example.springsecutiryexemple.security;
 
-import com.example.springsecutiryexemple.exceptions.UserNotFoundException;
+import com.example.springsecutiryexemple.DTO.exceptions.UserNotFoundException;
 import com.example.springsecutiryexemple.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

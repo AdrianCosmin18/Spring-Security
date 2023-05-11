@@ -14,9 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import static com.example.springsecutiryexemple.utils.Utils.JWT_TOKEN_HEADER;
 
@@ -40,9 +44,11 @@ public class UserController {
         authenticate(user.getEmail(), user.getPassword());
         User userLogin = userService.findUserByEmail(user.getEmail());
 
+        Collection<? extends GrantedAuthority> authorities = userLogin.getAuthorities();
+
         HttpHeaders jwtHeader = getJwtHeader(userLogin);
         Long userId = this.userService.findIdByUsername(user.getEmail());
-        LoginResponse loginResponse = new LoginResponse(userId, user.getEmail(), jwtHeader.getFirst(JWT_TOKEN_HEADER));
+        LoginResponse loginResponse = new LoginResponse(userId, user.getEmail(), jwtHeader.getFirst(JWT_TOKEN_HEADER), authorities);
 
         return new ResponseEntity<>(loginResponse, jwtHeader, HttpStatus.OK);
     }
@@ -79,19 +85,19 @@ public class UserController {
     }
 
     @PostMapping("/add-book-to-user/{email}")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public void addBookToUser(@PathVariable String email, @RequestParam(value = "bookId") long bookId){
         this.userService.addBookToUser(email, bookId);
     }
 
     @DeleteMapping("/remove-book-from-user/{email}")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public void removeBookFromUser(@PathVariable String email, @RequestParam(value = "bookId") long bookId){
         this.userService.removeBookFromUser(email, bookId);
     }
 
     @GetMapping("/get-user-books/{email}")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAuthority('book:read')")
     public ResponseEntity<List<Book>> getUserBooks(@PathVariable String email){
         return new ResponseEntity<>(this.userService.getUserBooks(email), HttpStatus.OK);
     }

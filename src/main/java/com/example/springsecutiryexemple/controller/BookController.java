@@ -35,4 +35,10 @@ public class BookController {
     public ResponseEntity<List<Book>> getAvailableBooks(){
         return new ResponseEntity<>(this.bookService.getAvailableBooks(), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<Book> getBookById(@PathVariable Long id){
+        return new ResponseEntity<>(this.bookService.getBookById(id), HttpStatus.OK);
+    }
 }

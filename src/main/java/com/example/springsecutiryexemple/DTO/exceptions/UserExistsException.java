@@ -1,12 +1,11 @@
-package com.example.springsecutiryexemple.exceptions;
+package com.example.springsecutiryexemple.DTO.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class NoBookFoundException extends RuntimeException{
-
-    public NoBookFoundException(String msg){
+public class UserExistsException extends RuntimeException{
+    public UserExistsException(String msg){
         super(msg);
     }
 }
