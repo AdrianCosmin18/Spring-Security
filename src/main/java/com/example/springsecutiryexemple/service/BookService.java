@@ -52,5 +52,25 @@ public class BookService {
                 .orElseThrow(() -> new NoBookFoundException("There is no book with this id: "+ id));
     }
 
+    public void updateBook(long bookId, BookDto bookDto){
+
+        Book book = this.bookRepo.findById(bookId)
+                .orElseThrow(() -> new NoBookFoundException("No book found with this id: " + bookId));
+
+        book.setName(bookDto.getName());
+        book.setAuthor(bookDto.getAuthor());
+        book.setNumberOfPages(bookDto.getNumberOfPages());
+
+        this.bookRepo.saveAndFlush(book);
+    }
+
+    public void deleteBook(long id){
+        if(this.bookRepo.findById(id).isPresent()){
+            this.bookRepo.deleteById(id);
+        }else{
+            throw new NoBookFoundException("No book found with this id: " + id);
+        }
+    }
+
 
 }

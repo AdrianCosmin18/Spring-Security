@@ -1,11 +1,13 @@
 package com.example.springsecutiryexemple.controller;
 
+import com.example.springsecutiryexemple.DTO.BookDto;
 import com.example.springsecutiryexemple.DTO.LoginResponse;
 import com.example.springsecutiryexemple.DTO.RegisterResponse;
 import com.example.springsecutiryexemple.DTO.UserDTO;
 import com.example.springsecutiryexemple.jwt.JWTTokenProvider;
 import com.example.springsecutiryexemple.models.Book;
 import com.example.springsecutiryexemple.models.User;
+import com.example.springsecutiryexemple.service.BookService;
 import com.example.springsecutiryexemple.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +33,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private BookService bookService;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -100,5 +104,23 @@ public class UserController {
     @PreAuthorize("hasAuthority('book:read')")
     public ResponseEntity<List<Book>> getUserBooks(@PathVariable String email){
         return new ResponseEntity<>(this.userService.getUserBooks(email), HttpStatus.OK);
+    }
+
+    @PutMapping("/update-book/{bookId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public void updateBook(@PathVariable long bookId, @RequestBody BookDto bookDto){
+        this.bookService.updateBook(bookId, bookDto);
+    }
+
+    @DeleteMapping("/delete-book/{bookId}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public void deleteBook(@PathVariable long bookId){
+        this.bookService.deleteBook(bookId);
+    }
+
+    @GetMapping("/get-all-users")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public List<UserDTO> getAllUsers(){
+        return this.userService.getAllUsers();
     }
 }

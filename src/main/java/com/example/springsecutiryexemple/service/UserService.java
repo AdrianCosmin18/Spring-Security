@@ -9,9 +9,13 @@ import com.example.springsecutiryexemple.models.User;
 import com.example.springsecutiryexemple.repo.BookRepo;
 import com.example.springsecutiryexemple.repo.UserRepo;
 import com.example.springsecutiryexemple.security.UserRole;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -75,5 +79,23 @@ public class UserService {
         User user = this.userRepo.getUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("No user with this email"));
         return user.getBooks();
+    }
+
+    public List<UserDTO> getAllUsers(){
+
+        List<User> users = this.userRepo.findAll();
+        List<UserDTO> userDTOS = new ArrayList<>();
+        for(User u: users){
+
+            UserDTO userDTO = new UserDTO(u.getName(), u.getPassword(), u.getEmail(), u.getPhone());
+            String role = u.getUserRole().name();
+            if(role.equals("ADMIN")){
+                userDTO.setRole("ADMIN");
+            }else if(role.equals("USER")){
+                userDTO.setRole("USER");
+            }
+            userDTOS.add(userDTO);
+        }
+        return userDTOS;
     }
 }
