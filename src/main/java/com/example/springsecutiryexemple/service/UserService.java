@@ -40,6 +40,21 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
+    public UserDTO getUserByEmail(String email){
+        User user = this.userRepo.getUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        UserDTO userDTO = new UserDTO(user.getName(), user.getPassword(), user.getEmail(), user.getPhone());
+
+        String role = user.getUserRole().name();
+        if(role.equals("ADMIN")){
+            userDTO.setRole("ADMIN");
+        }else if(role.equals("USER")){
+            userDTO.setRole("USER");
+        }
+
+        return userDTO;
+    }
+
     public Long findIdByUsername(String email){
         return this.userRepo.findIdByUsername(email)
                 .orElseThrow(() -> new UserNotFoundException("User id not found"));
@@ -97,5 +112,21 @@ public class UserService {
             userDTOS.add(userDTO);
         }
         return userDTOS;
+    }
+
+    public void deleteUser(String email){
+        User user = this.userRepo.getUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        this.userRepo.deleteUserByEmail(email);
+    }
+
+    public void updateUser(String email, UserDTO userDTO){
+        User user = this.userRepo.getUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPhone(userDTO.getPhone());
+
+        this.userRepo.saveAndFlush(user);
     }
 }

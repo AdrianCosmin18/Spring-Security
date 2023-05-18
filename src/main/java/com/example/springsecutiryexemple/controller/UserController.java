@@ -123,4 +123,22 @@ public class UserController {
     public List<UserDTO> getAllUsers(){
         return this.userService.getAllUsers();
     }
+
+    @GetMapping("/get-user-by-email/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public UserDTO getUserByEmail(@PathVariable String email){
+        return this.userService.getUserByEmail(email);
+    }
+
+    @DeleteMapping("/delete-user-by-email/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public void deleteUser(@PathVariable String email){
+        this.userService.deleteUser(email);
+    }
+
+    @PutMapping("/update-user/{email}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public void updateUser(@PathVariable String email, @RequestBody UserDTO userDTO){
+        this.userService.updateUser(email, userDTO);
+    }
 }
